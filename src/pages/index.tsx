@@ -1,7 +1,6 @@
 // pages/index.tsx
 import type { NextPage } from 'next';
 import Blocks from '../components/Blocks';
-import '../styles/globals.css'
 
 const Home: NextPage = () => {
   return (
