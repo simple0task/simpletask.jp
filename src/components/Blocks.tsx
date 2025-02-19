@@ -212,7 +212,9 @@ const Blocks = () => {
                     }
                 });
 
-                rendererRef.current.render(sceneRef.current, cameraRef.current);
+                if (rendererRef.current && cameraRef.current) {
+                    rendererRef.current.render(sceneRef.current, cameraRef.current);
+                }
             };
 
             animate();
@@ -226,9 +228,11 @@ const Blocks = () => {
 
             // クリーンアップ関数
             return () => {
-                clearInterval(cubeGenerationIntervalRef.current);
-                document.removeEventListener('contextmenu', handleContextMenu);
-                document.removeEventListener('click', alignCubes);
+                if (cubeGenerationIntervalRef.current) {
+                    clearInterval(cubeGenerationIntervalRef.current);
+                    document.removeEventListener('contextmenu', handleContextMenu);
+                    document.removeEventListener('click', alignCubes);
+                }
             };
         }
     }, []);
@@ -236,8 +240,10 @@ const Blocks = () => {
     // スライダーの値が変更されたときに実行される関数
     const handleSliderChange = (value: number) => {
         setSliderValue(value);
-        clearInterval(cubeGenerationIntervalRef.current); // 古いインターバルをクリア
-        cubeGenerationIntervalRef.current = setInterval(createCube, value); // valueを使用
+        if (cubeGenerationIntervalRef.current) {
+            clearInterval(cubeGenerationIntervalRef.current); // 古いインターバルをクリア
+            cubeGenerationIntervalRef.current = setInterval(createCube, value); // valueを使用
+        }
     };
 
     return (
