@@ -15,8 +15,6 @@ const Slider: React.FC<SliderProps> = ({ value, onChange, min, max }) => {
         top: '10px',
         left: '10px',
         width: '120px',
-        // カスタムCSS変数を定義
-        '--slider-color': '#578FCA',
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +34,7 @@ const Slider: React.FC<SliderProps> = ({ value, onChange, min, max }) => {
                         height: 16px;
                         width: 16px;
                         border-radius: 50%;
-                        background: var(--slider-color);
+                        background: #578FCA;
                         cursor: pointer;
                         margin-top: -6px;
                     }
