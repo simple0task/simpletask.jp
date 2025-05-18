@@ -21,8 +21,8 @@ const Home: NextPage = () => {
           fontSize: '1rem',
           paddingTop: '0.5rem',
         }}>works</h1>
-        <a className="mx-2" target="_blank" href="https://miikke.jp">https://miikke.jp</a> | 
-        <a className="mx-2" href="">https://quizdy.net</a> | 
+        <a className="mx-2" target="_blank" href="https://miikke.jp">https://miikke.jp</a><br> 
+        <a className="mx-2" target="_blank" href="https://quizdy.net">https://quizdy.net</a><br> 
         <a className="mx-2" href="">https://twilight.jp</a> 
       </div>
     </>
