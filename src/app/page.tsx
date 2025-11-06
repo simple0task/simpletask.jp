@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="absolute bottom-16 left-12">
+    <div className="absolute bottom-16 left-8">
       <div className="flex items-center justify-center">
         <Image
           src="/side-logo.png"
