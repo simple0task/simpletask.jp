@@ -20,6 +20,9 @@ const quicksand = Quicksand({
 export const metadata: Metadata = {
   title: "simpletask.jp",
   description: "",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
