@@ -29,3 +29,11 @@ body {
 a, p {
   font-family: var(--font-quicksand), sans-serif;
 }
+
+/* 落ち葉アニメーション */
+.falling-leaf {
+  position: fixed;
+  top: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
