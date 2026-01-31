@@ -5,11 +5,12 @@ export default function Home() {
     <div className="absolute bottom-16 left-8">
       <div className="flex items-center justify-center">
         <Image
-          src="/side-logo.png"
+          src="/side-logo-w.png"
           alt="icon"
           width={160}
           height={40}
           priority
+          unoptimized
         />
         </div>
         <p className="mx-4 my-2 text-sm">システムの開発してます</p>
