@@ -96,10 +96,99 @@ function FallingLeaf() {
   );
 }
 
+function ContactDialog({ onClose }: { onClose: () => void }) {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, message }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50"
+      style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-white dark:bg-gray-900 rounded-lg p-6 w-80 shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-sm font-semibold mb-4 dark:text-white">お問い合わせ</h2>
+        {status === "sent" ? (
+          <div className="text-sm dark:text-white">
+            <p>送信しました。ありがとうございます。</p>
+            <button
+              className="mt-4 text-xs text-gray-500 dark:text-gray-400 underline"
+              onClick={onClose}
+            >
+              閉じる
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            <input
+              type="email"
+              required
+              placeholder="メールアドレス"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-transparent dark:text-white outline-none focus:border-gray-500"
+            />
+            <textarea
+              required
+              placeholder="内容"
+              rows={5}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm bg-transparent dark:text-white outline-none focus:border-gray-500 resize-none"
+            />
+            {status === "error" && (
+              <p className="text-xs text-red-500">送信に失敗しました。再度お試しください。</p>
+            )}
+            <div className="flex justify-end gap-3 mt-1">
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-xs text-gray-500 dark:text-gray-400"
+              >
+                キャンセル
+              </button>
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded px-3 py-1 disabled:opacity-50"
+              >
+                {status === "sending" ? "送信中..." : "送信"}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
+  const [showContact, setShowContact] = useState(false);
+
   return (
     <>
       <FallingLeaf />
+      {showContact && <ContactDialog onClose={() => setShowContact(false)} />}
       <div className="absolute bottom-16 left-8">
       <div className="flex items-center justify-center">
         <picture>
@@ -121,7 +210,12 @@ export default function Home() {
       </div>
 
       <p className="mx-4 my-2 text-sm">システムの開発してます</p>
-      <p className="mx-6 text-sm">info@simpletask.jp</p>
+      <p
+        className="mx-6 text-sm cursor-pointer hover:underline"
+        onClick={() => setShowContact(true)}
+      >
+        contact
+      </p>
       <p className="mx-4 my-2 text-sm">works</p>
       <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://miikke.jp">
         https://miikke.jp
