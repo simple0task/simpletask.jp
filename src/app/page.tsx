@@ -191,9 +191,44 @@ function ContactDialog({ onClose, visible }: { onClose: () => void; visible: boo
   );
 }
 
+function ImageViewer({ src, alt, onClose, visible }: { src: string; alt: string; onClose: () => void; visible: boolean }) {
+  return (
+    <div
+      className={`image-viewer-backdrop fixed inset-0 items-center justify-center z-50${visible ? " is-visible" : ""}`}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      onClick={onClose}
+    >
+      <div
+        className="image-viewer-content"
+        style={{
+          borderRadius: "20px",
+          overflow: "hidden",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={src}
+          alt={alt}
+          width={640}
+          height={480}
+          unoptimized
+          style={{
+            display: "block",
+            maxWidth: "90vw",
+            maxHeight: "80vh",
+            objectFit: "cover",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [showContact, setShowContact] = useState(false);
   const [contactMounted, setContactMounted] = useState(false);
+  const [showWorks, setShowWorks] = useState(false);
 
   const openContact = () => { setContactMounted(true); requestAnimationFrame(() => setShowContact(true)); };
   const closeContact = () => {
@@ -201,11 +236,20 @@ export default function Home() {
     setTimeout(() => setContactMounted(false), 200);
   };
 
+  const openWorks = () => setShowWorks(true);
+  const closeWorks = () => setShowWorks(false);
+
   return (
     <>
       <FallingLeaf />
       {contactMounted && <ContactDialog onClose={closeContact} visible={showContact} />}
-      <div className="absolute bottom-16 left-8">
+      <ImageViewer
+        src="/works/jet-stream-01.png"
+        alt="注文管理システム"
+        onClose={closeWorks}
+        visible={showWorks}
+      />
+      <div className="absolute bottom-16 left-8 flex flex-col items-start justify-center">
         <div className="flex items-center justify-center">
           <picture>
             {/* ダークモード時に使う画像 */}
@@ -227,14 +271,19 @@ export default function Home() {
 
         <p className="mx-4 my-2 text-sm">システムの開発してます</p>
 
-        <p className="mx-4 mt-4 mb-2 text-sm">works</p>
-        <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://miikke.jp">
+        <p className="mx-4 mt-2 mb-2 text-sm">works</p>
+        <a className="mx-6 mt-1 text-sm" target="_blank" rel="noreferrer" href="https://miikke.jp">
           https://miikke.jp
         </a>
-        <br />
-        <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://quizdy.net">
+        <a className="mx-6 mt-2 text-sm" target="_blank" rel="noreferrer" href="https://quizdy.net">
           https://quizdy.net
         </a>
+        <span
+          className="mx-6 mt-3 text-xs cursor-pointer"
+          onClick={openWorks}
+        >
+          注文管理システム
+        </span>
         <p
         className="mx-4 mt-4 text-sm cursor-pointer hover:underline"
         onClick={openContact}
