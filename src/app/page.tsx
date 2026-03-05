@@ -96,7 +96,7 @@ function FallingLeaf() {
   );
 }
 
-function ContactDialog({ onClose }: { onClose: () => void }) {
+function ContactDialog({ onClose, visible }: { onClose: () => void; visible: boolean }) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -120,19 +120,28 @@ function ContactDialog({ onClose }: { onClose: () => void }) {
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50"
-      style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+      style={{
+        backgroundColor: "rgba(0,0,0,0.4)",
+        transition: "opacity 0.2s ease",
+        opacity: visible ? 1 : 0,
+      }}
       onClick={onClose}
     >
       <div
         className="bg-white dark:bg-gray-900 rounded-lg p-6 w-80 shadow-lg"
+        style={{
+          transition: "transform 0.2s ease, opacity 0.2s ease",
+          transform: visible ? "scale(1)" : "scale(0.8)",
+          opacity: visible ? 1 : 0,
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-sm font-semibold mb-4 dark:text-white">お問い合わせ</h2>
         {status === "sent" ? (
           <div className="text-sm dark:text-white">
-            <p>送信しました。ありがとうございます。</p>
+            <p>送信しました。ありがとうございました。</p>
             <button
-              className="mt-4 text-xs text-gray-500 dark:text-gray-400 underline"
+              className="mt-4 text-xs text-gray-500 dark:text-gray-400 underline cursor-pointer"
               onClick={onClose}
             >
               閉じる
@@ -163,14 +172,14 @@ function ContactDialog({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="text-xs text-gray-500 dark:text-gray-400"
+                className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer"
               >
                 キャンセル
               </button>
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded px-3 py-1 disabled:opacity-50"
+                className="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
                 {status === "sending" ? "送信中..." : "送信"}
               </button>
@@ -184,46 +193,54 @@ function ContactDialog({ onClose }: { onClose: () => void }) {
 
 export default function Home() {
   const [showContact, setShowContact] = useState(false);
+  const [contactMounted, setContactMounted] = useState(false);
+
+  const openContact = () => { setContactMounted(true); requestAnimationFrame(() => setShowContact(true)); };
+  const closeContact = () => {
+    setShowContact(false);
+    setTimeout(() => setContactMounted(false), 200);
+  };
 
   return (
     <>
       <FallingLeaf />
-      {showContact && <ContactDialog onClose={() => setShowContact(false)} />}
+      {contactMounted && <ContactDialog onClose={closeContact} visible={showContact} />}
       <div className="absolute bottom-16 left-8">
-      <div className="flex items-center justify-center">
-        <picture>
-          {/* ダークモード時に使う画像 */}
-          <source
-            srcSet="/side-logo-dark-mode.png"
-            media="(prefers-color-scheme: dark)"
-          />
-          {/* ライトモードのフォールバック */}
-          <Image
-            src="/side-logo.png"
-            alt="icon"
-            width={160}
-            height={40}
-            priority
-            unoptimized
-          />
-        </picture>
-      </div>
+        <div className="flex items-center justify-center">
+          <picture>
+            {/* ダークモード時に使う画像 */}
+            <source
+              srcSet="/side-logo-dark-mode.png"
+              media="(prefers-color-scheme: dark)"
+            />
+            {/* ライトモードのフォールバック */}
+            <Image
+              src="/side-logo.png"
+              alt="icon"
+              width={160}
+              height={40}
+              priority
+              unoptimized
+            />
+          </picture>
+        </div>
 
-      <p className="mx-4 my-2 text-sm">システムの開発してます</p>
-      <p
-        className="mx-6 text-sm cursor-pointer hover:underline"
-        onClick={() => setShowContact(true)}
+        <p className="mx-4 my-2 text-sm">システムの開発してます</p>
+
+        <p className="mx-4 mt-4 mb-2 text-sm">works</p>
+        <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://miikke.jp">
+          https://miikke.jp
+        </a>
+        <br />
+        <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://quizdy.net">
+          https://quizdy.net
+        </a>
+        <p
+        className="mx-4 mt-4 text-sm cursor-pointer hover:underline"
+        onClick={openContact}
       >
         contact
       </p>
-      <p className="mx-4 my-2 text-sm">works</p>
-      <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://miikke.jp">
-        https://miikke.jp
-      </a>
-      <br />
-      <a className="mx-6 text-sm" target="_blank" rel="noreferrer" href="https://quizdy.net">
-        https://quizdy.net
-      </a>
       </div>
     </>
   );

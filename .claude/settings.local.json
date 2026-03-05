@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install nodemailer @types/nodemailer)"
+      "Read",
+      "Edit",
+      "Write",
+      "Bash",
+      "Glob",
+      "Grep",
+      "Skill(frontend-design)",
+      "Skill(frontend-design:*)",
+      "WebFetch",
+      "WebSearch"
     ]
   }
 }
